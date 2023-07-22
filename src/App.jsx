@@ -4,7 +4,7 @@ import NewsGrid from './assets/Components/NewsGrid';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
-const apiKey = import.meta.env.VITE_API_KEY;
+
 
 function App() {
   const [news, setNews] = useState([]);
@@ -24,7 +24,7 @@ function App() {
 
    const api = async () => {
    try {
-    let response = await fetch(`https://newsapi.org/v2/everything?q=${apichange}&apiKey=${apiKey}`)
+    let response = await fetch(`https://newsapi.org/v2/everything?q=${apichange}&apiKey=2c903c8753634d1182e3043bdf6855ff`)
     let result = await response.json();
     console.log(result);
     setNews(result.articles)
