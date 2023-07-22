@@ -1,20 +1,20 @@
 ## NEWS app
-- this app is made using Vite + React
+- This app is made using Vite + React
+
 ## Preview
+![Screenshot 2023-07-22 195940](https://github.com/preston176/news-app-react/assets/49411983/14f547fa-344c-42f1-9e6f-cc0c8195646b)
 
-![image](https://github.com/preston176/news-app-react/assets/49411983/1a67dd88-7c0e-4406-8cc0-5e7b4ac94179)
 ## Usage
-
 - run `git clone (projectname)` on your CLI
 - then `npm install`
 - `npm run dev` `and it will launch on your localhost
 - (Optional) you might need api key from newsapi.org
 
 ## Features
-- ability to search for specific news category
-- responsive design
-- shows author name and time when it was uploaded
-- ability to view source of the news
+- Ability to search for specific news category
+- Responsive design
+- Shows author name and time when it was uploaded
+- Ability to view source of the news
 
 ## Contributions
 - If you'd like to contribute to our project, whether it's by reporting bugs, suggesting improvements, or submitting code changes, we're excited to collaborate with you.
