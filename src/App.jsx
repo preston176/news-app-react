@@ -16,7 +16,7 @@ function App() {
 
   function submit(e) {
     e.preventDefault();
-    searchQuery &&setApiChange(searchQuery)
+    searchQuery ? setApiChange(searchQuery) : setApiChange('android')
     
   }
 
@@ -36,14 +36,14 @@ function App() {
     api()
    },[apichange])
   
-// console.log();
+console.log();
 
 
   return (
 
 <>
 <form onSubmit={submit} className='fixed top-0 left-0 right-0 bg-white p-4 shadow-md'>
-<span className='py-2 m-2 '> <SearchIcon /> <input type='text' className='bg-yellow-800 ' onChange={change} /></span>
+<span className='py-2 m-2 '> <SearchIcon /> <input type='text' className='bg-zinc-800 border-none outline-none rounded text-white p-1' onChange={change} /></span>
 
 <Button type='submit' variant='outlined'> Search </Button>
 </form>
