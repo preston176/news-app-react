@@ -1,9 +1,9 @@
 
-const NewsGrid = ({news, key}) => {
+const NewsGrid = ({news}) => {
   return (
     <div className="grid gap-2 lg:grid-cols-4">
-    {news.map((items, key) => (
-        <div className="w-full rounded-lg shadow-md lg:max-w-sm" key={key}>
+    {news.map((items) => (
+        <div className="w-full rounded-lg shadow-md lg:max-w-sm" key={crypto.randomUUID()}>
             <img
                 className="object-cover w-full h-48"
                 src={items.urlToImage}
