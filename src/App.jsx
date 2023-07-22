@@ -15,7 +15,7 @@ function App() {
     api()
    },[])
   
-console.log();
+// console.log();
 
 
   return (
