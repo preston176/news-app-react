@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import NewsGrid from './assets/Components/NewsGrid';
+import SearchIcon from '@mui/icons-material/Search';
+import { Button } from '@mui/material';
 
 function App() {
   const [news, setNews] = useState([]);
@@ -14,7 +16,8 @@ function App() {
 
   function submit(e) {
     e.preventDefault();
-    setApiChange(searchQuery)
+    searchQuery &&setApiChange(searchQuery)
+    
   }
 
    const api = async () => {
@@ -39,9 +42,10 @@ function App() {
   return (
 
 <>
-<form onSubmit={submit}>
-<input type='text' className='bg-yellow-800 ' onChange={change} />
-<button type='submit'> Search </button>
+<form onSubmit={submit} className='fixed top-0 left-0 right-0 bg-white p-4 shadow-md'>
+<span className='py-2 m-2 '> <SearchIcon /> <input type='text' className='bg-yellow-800 ' onChange={change} /></span>
+
+<Button type='submit' variant='outlined'> Search </Button>
 </form>
     <NewsGrid news={news} />
 </>
