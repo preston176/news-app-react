@@ -1,35 +1,138 @@
+import React, { useEffect, useState } from "react";
+import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 
-const NewsGrid = ({news}) => {
- 
+const NewsGrid = () => {
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true); // Loader state
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch(
+          `https://newsapi.org/v2/everything?q=technology&apiKey=2c903c8753634d1182e3043bdf6855ff`
+        );
+        const data = await response.json();
+        // Filter out articles that don't have the required fields
+        const filteredArticles = data.articles.filter(item => 
+          item.title && item.description && item.urlToImage
+        );
+        setNews(filteredArticles);
+        setLoading(false); // Set loading to false after data is fetched
+      } catch (error) {
+        console.error("Error fetching news:", error);
+        setLoading(false); // Stop loading even on error
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  // Share functionality
+  const handleShare = (platform, url) => {
+    let shareUrl = "";
+    const title = encodeURIComponent("Check out this news article!");
+    
+    switch (platform) {
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${encodeURIComponent(url)}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://api.whatsapp.com/send?text=${title} ${encodeURIComponent(url)}`;
+        break;
+      default:
+        return;
+    }
+
+    window.open(shareUrl, "_blank");
+  };
+
+  // Loader component
+  const Loader = () => (
+    <div className="flex flex-col justify-center items-center min-h-screen">
+      <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32 mb-4"></div>
+      <p className="text-gray-500 dark:text-gray-300 text-lg">Please wait...</p>
+    </div>
+  );
+
   return (
-    <div className="grid gap-2 lg:grid-cols-4">
-    {news.map((items) => (
-        <div className="w-full rounded-lg shadow-md lg:max-w-sm" key={crypto.randomUUID()}>
-            <img
-                className="object-cover w-full h-48"
-                src={items.urlToImage}
-                alt="image"
-            />
-            <div className="p-4">
-                <h4 className="text-xl font-semibold text-blue-600">
-                    
-                    {items.title}
-                </h4>
-                <p className="mb-2 leading-normal">
-                {items.content}
-                </p>
-                <div className="justify-between flex flex-row">
-                <button className="px-4 py-2 text-sm text-blue-100 bg-blue-500 rounded shadow" >
-                  <a href={items.url}>Read more</a>  
-                </button>
-                    <div className="font-semibold">by {items.author}</div>
-                    <div className="text-gray-700">{items.publishedAt}</div>                
+    <div className="min-h-screen bg-gradient-to-br from-green-400 to-blue-500 dark:bg-gradient-to-br dark:from-gray-800 dark:to-black p-8 transition-colors duration-300">
+      {loading ? (
+        <Loader /> // Show loader while fetching data
+      ) : (
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {news.length > 0 ? ( // Check if there are any articles to display
+            news.map((item) => (
+              <div
+                className="relative max-w-sm rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-900 transition-transform transform hover:scale-105 group"
+                key={item.url}
+              >
+                <img
+                  className="w-full h-64 object-cover"
+                  src={item.urlToImage}
+                  alt={item.title}
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center p-6">
+                  <p className="text-gray-200 mb-4">{item.description}</p>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute top-4 right-4 text-xs border border-white text-white px-3 py-1 rounded-full hover:bg-white hover:text-black transition-colors duration-200"
+                  >
+                    Read More
+                  </a>
                 </div>
-            </div>
+                <div className="p-4 bg-white dark:bg-gray-900">
+                  <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+                    {item.title}
+                  </h3>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="flex space-x-4 z-10">
+                      <button
+                        onClick={() => handleShare("twitter", item.url)}
+                        className="text-blue-500"
+                      >
+                        <FaTwitter />
+                      </button>
+                      <button
+                        onClick={() => handleShare("facebook", item.url)}
+                        className="text-blue-500"
+                      >
+                        <FaFacebook />
+                      </button>
+                      <button
+                        onClick={() => handleShare("linkedin", item.url)}
+                        className="text-blue-500"
+                      >
+                        <FaLinkedin />
+                      </button>
+                      <button
+                        onClick={() => handleShare("whatsapp", item.url)}
+                        className="text-green-500"
+                      >
+                        <FaWhatsapp />
+                      </button>
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(item.publishedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-300">No articles available.</p>
+          )}
         </div>
-    ))}
-</div>
-  )
-}
+      )}
+    </div>
+  );
+};
 
-export default NewsGrid
+export default NewsGrid;

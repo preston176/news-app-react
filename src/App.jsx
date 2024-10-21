@@ -1,60 +1,46 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import NewsGrid from './assets/Components/NewsGrid';
-import SearchIcon from '@mui/icons-material/Search';
-import { Button } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./assets/Components/Login";
+import Signup from "./assets/Components/Signup";
+import NewsGrid from "./assets/Components/NewsGrid";
+import Navbar from "./assets/Components/Navbar";
+import Profile from "./assets/Components/Profile";
+import SearchResults from "./assets/Components/SearchResults"; // Import SearchResults
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./assets/Components/PrivateRoute";
 
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false); // Dark mode state
 
-function App() {
-  const [news, setNews] = useState([]);
-  const [apichange, setApiChange] = useState("android");
-  const [searchQuery, setSearchQuery] = useState('')
-
-
-  function change(e) {
-    setSearchQuery(e.target.value)
-  }
-
-  function submit(e) {
-    e.preventDefault();
-    searchQuery ? setApiChange(searchQuery) : setApiChange('android')
-
-  }
-
-  const api = async () => {
-    try {
-      let response = await fetch(`https://newsapi.org/v2/everything?q=${apichange}&apiKey=2c903c8753634d1182e3043bdf6855ff`)
-      let result = await response.json();
-      console.log(result);
-      setNews(result.articles)
-    } catch (error) {
-      console.error('Error fetching news:', error)
-      setNews([])
-    }
-  }
-  useEffect(() => {
-    api()
-  }, [apichange])
-
-  // console.log();
-
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   return (
-
-    <>
-      <div className="fixed top-0 left-0 right-0 bg-white p-4 shadow-md flex justify-between ">
-        <form onSubmit={submit} className=''>
-          <span className='py-2 m-2 '> <SearchIcon /> <input type='text' className='bg-zinc-800 border-none outline-none rounded text-white p-1' onChange={change} /></span>
-
-          <Button type='submit' variant='outlined'> Search </Button>
-        </form>
-        <nav className="text-black"><a href="https://github.com/preston176/preston176">made by <GitHubIcon /></a></nav>
+    <AuthProvider>
+      <div className={darkMode ? "dark bg-gray-900" : "bg-white"}>
+        <Router>
+          <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          <div className="container mx-auto mt-5 min-h-screen transition-colors duration-300">
+            <Routes>
+              <Route path="/" element={<NewsGrid />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/search" element={<SearchResults />} /> {/* Add search route */}
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </Router>
       </div>
-      <NewsGrid news={news} />
+    </AuthProvider>
+  );
+};
 
-    </>
-  )
-}
-
-export default App
+export default App;
